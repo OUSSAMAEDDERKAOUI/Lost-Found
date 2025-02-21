@@ -23,7 +23,6 @@ class annonce extends Model
     public function user(){
         return $this->belongsTo(User::class);
      }
-    // Dans le modèle Annonce
 public function comments()
 {
     return $this->hasMany(comment::class, 'id_annonce');

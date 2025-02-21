@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('annonce', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('titre'); 
-            $table->text('description'); 
-            $table->string('image')->nullable();
-            $table->string('code_postal'); 
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('categorie_id')->references('id')->on('category')->onDelete('cascade'); 
+            $table->longText('contenu');
+            $table->integer('id_annonce');
+            $table->integer('id_user');
+            $table->foreign('id_user')
+            ->references('id')
+            ->on('users')->onDelete('cascade'); 
+            $table->foreign('id_annonce')->references('id')->on('annonces')->onDelete('cascade'); 
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('annonce');
+        Schema::dropIfExists('comments');
     }
 };

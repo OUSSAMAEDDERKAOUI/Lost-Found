@@ -22,84 +22,98 @@
     <main class="container mx-auto px-4 py-8">
       <div class="max-w-4xl mx-auto">
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-               alt="iPhone perdu" 
-               class="w-full h-64 object-cover">
+          @if($annonces->image)
+          <img src="{{ asset('storage/' . $annonces->image) }}" 
+               alt="{{ $annonces->title }}" 
+               class="w-full h-48 object-cover">
+      @else
+      <img src="https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+      alt="Image par défaut" 
+               class="w-full h-48 object-cover">
+      @endif
           <div class="p-6">
             <div class="flex justify-between items-start mb-4">
-              <h2 class="text-2xl font-bold">iPhone 13 Pro perdu</h2>
-              <span class="px-3 py-1 text-sm rounded bg-red-100 text-red-800">
-                Perdu
-              </span>
+              <h2 class="text-2xl font-bold">{{ $annonces->title }}</h2>
+              @if($annonces->type=='Lost')
+              <span class="px-2 py-1 text-sm rounded bg-red-100 text-red-800">Perdu</span>
+              @else
+              <span class="px-2 py-1 text-sm rounded bg-green-100 text-green-800">Trouvé</span>
+
+              @endif
             </div>
             
             <div class="space-y-4">
-              <p class="text-gray-700">iPhone 13 Pro gris sidéral perdu dans le parc central. L'appareil est dans une coque bleue avec des stickers. Récompense proposée pour celui qui le retrouvera.</p>
+              <p class="text-gray-700">{{ $annonces->description }}</p>
               
               <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                <div>
-                  <p class="font-semibold">Catégorie:</p>
-                  <p>Électronique</p>
-                </div>
+            
                 <div>
                   <p class="font-semibold">Date:</p>
-                  <p>15/03/2024</p>
+                  <p>{{ $annonces->created_at}}</p>
                 </div>
                 <div>
                   <p class="font-semibold">Lieu:</p>
-                  <p>Parc Central</p>
+                  <p>{{ $annonces->lieu }}</p>
                 </div>
                 <div>
                   <p class="font-semibold">Contact:</p>
-                  <p>📱 06 12 34 56 78</p>
-                  <p>✉️ contact@email.com</p>
+                  <p>📱 {{ $annonces->phone}}</p>
                 </div>
               </div>
             </div>
 
             <div class="mt-8">
               <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-semibold">Commentaires (3)</h3>
-                <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-                  Ajouter un commentaire
-                </button>
+                  <h3 class="text-xl font-semibold">Commentaires :</h3>
+                  <button id='commentButton' class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                      Ajouter un commentaire
+                  </button>
               </div>
-              
+             @foreach($annonces->comments as $comment) 
               <div class="space-y-4">
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <p class="text-gray-700">J'ai vu un iPhone qui correspond à la description près du kiosque à journaux.</p>
-                  <p class="text-sm text-gray-500 mt-2">15/03/2024 14:30</p>
-                </div>
-                
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <p class="text-gray-700">Je vais vérifier au kiosque sur mon chemin du retour ce soir.</p>
-                  <p class="text-sm text-gray-500 mt-2">15/03/2024 15:45</p>
-                </div>
-                
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <p class="text-gray-700">Je suis passé mais je n'ai rien trouvé malheureusement.</p>
-                  <p class="text-sm text-gray-500 mt-2">15/03/2024 18:20</p>
-                </div>
+                  <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-blue-700 font-bold">{{ $comment->user->name }}</p>
+                      <p class="text-gray-900">{{ $comment->contenu}}</p>
+                      <p class="text-sm text-gray-500 mt-2">{{ $comment->created_at}}</p>
+                  </div>
               </div>
-            </div>
+              @endforeach
+
           </div>
-        </div>
-      </div>
-    </main>
-    <div id="commentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
-          <h2 class="text-xl font-bold mb-4">Ajouter un commentaire</h2>
-          <form id="commentForm" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Votre commentaire</label>
-              <textarea name="comment" class="mt-1 block w-full p-2 border rounded-lg" rows="3" required></textarea>
-            </div>
-            <div class="flex justify-end gap-4">
-              <button type="button" id="cancelComment" class="px-4 py-2 border rounded-lg">Annuler</button>
-              <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Publier</button>
-            </div>
-          </form>
-        </div>
-      </div>
+          <div id="commentModal" class=" hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div  class="bg-white rounded-lg p-6 w-full max-w-lg ">
+                  <h2 class="text-xl font-bold mb-4">Ajouter un commentaire </h2>
+                  <form id="commentForm" class="space-y-4" action="{{route('add')}}" method="POST">
+                    @csrf
+                      <div>
+                          <label class="block text-sm font-medium text-gray-700">Votre commentaire</label>
+                          <textarea name="comment" class="mt-1 block w-full p-2 border rounded-lg" rows="3" required></textarea>
+                      </div>
+                      <input type="hidden" name="annonce_id" value="{{ $annonces->id }}">
+                      <div class="flex justify-end gap-4">
+                          <button type="button" id="cancelComment" class="px-4 py-2 border rounded-lg">Annuler</button>
+                          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Publier</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+          
+          <script>
+              document.getElementById('commentButton').addEventListener('click', function() {
+                  document.getElementById('commentModal').classList.remove('hidden');  
+              });
+          
+              document.getElementById('cancelComment').addEventListener('click', function() {
+                  document.getElementById('commentModal').classList.add('hidden'); 
+              });
+          
+              window.addEventListener('click', function(event) {
+                  if (event.target === document.getElementById('commentModal')) {
+                      document.getElementById('commentModal').classList.add('hidden');  
+                  }
+              });
+          </script>
+          
   </body>
 </html>
+

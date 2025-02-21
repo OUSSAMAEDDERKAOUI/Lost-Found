@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('comment', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->longText('contenu');
-            $table->integer('id_user');
-            $table->foreign('id_user')
-            ->references('id')
-            ->on('users')->onDelete('cascade'); 
+            $table->string('titre');
+
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comment');
+        Schema::dropIfExists('categories');
     }
 };

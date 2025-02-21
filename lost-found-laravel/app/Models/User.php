@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -23,6 +24,14 @@ class User extends Authenticatable
         'password',
     ];
 
+ public function annonces()
+ {
+     return $this->hasMany(Annonce::class);  
+ }
+ public function comments()
+ {
+     return $this->hasMany(comment::class);  
+ }
     /**
      * The attributes that should be hidden for serialization.
      *
